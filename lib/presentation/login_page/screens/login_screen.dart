@@ -1,0 +1,159 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
+import 'package:todo_nodejs/presentation/core/colors/colors.dart';
+import 'package:todo_nodejs/presentation/core/constant/constant.dart';
+import 'package:todo_nodejs/presentation/sign_in_page/screens/sign_up_screen.dart';
+import 'package:todo_nodejs/presentation/sign_in_page/widgets/textfieldsignup.dart';
+
+
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  //     @override
+  // void dispose() {
+  //   emailController.dispose();
+  //   passwordController.dispose();
+  //   super.dispose();
+  // }
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
+    String? passwordValidator(String? password) {
+      if (password!.isEmpty) {
+        return 'Password empty';
+      } else if (password.length < 8) {
+        return 'password must be 8 digits';
+      }
+      return null;
+    }
+
+    String? emailaddressValidator(String? email) {
+      if (!EmailValidator.validate(emailController.text.trim())) {
+        return 'invalid email';
+      }
+
+      return null;
+    }
+
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 250,
+                ),
+                const Center(
+                  child: Text(
+                    'Login to Account',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+                sbox,
+                sbox,
+                sbox,
+                sbox,
+                // const SizedBox(
+                //   height: 100,
+                // ),
+                TextFieldSignUp(
+                    // passwordVisible: false,
+                    validator: emailaddressValidator,
+                    formKey: formKey,
+                    selection: 1,
+                    controller: emailController,
+                    icon: Icons.email,
+                    title: 'Email'),
+                sbox,
+                TextFieldSignUp(
+                  passwordVisible: true,
+                  // isNumberPad: true,
+                  validator: passwordValidator,
+                  // formKey: formKey,
+                  controller: passwordController,
+                  icon: Icons.password,
+                  title: 'Password',
+                ),
+                sbox,
+                sbox,
+                // SignUpButton(
+                //   // ontap: signIn(),
+                //   size: size,
+                //   color: colorgreen,
+                //   text: 'Log In',
+                //   widget: MainPage(),
+                // ),
+                InkWell(
+                  onTap: () {
+                    // StreamBuilder(
+                    //   stream: FirebaseAuth.instance.authStateChanges(),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState == ConnectionState.done) {
+                    //       Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => MainPage(),
+                    //           ));
+                    //     } else {
+                    //       return SnackBar(
+                    //           content: Text('Something went wrong'));
+                    //     }
+                    //     return LoginOrSignUp();
+                    //   },
+                    // );
+                  },
+                  child: Container(
+                    width: size.width * 0.9,
+                    height: size.width * 0.13,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: colorgreen),
+                        borderRadius: BorderRadius.circular(20),
+                        color: colorgreen),
+                    child: const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'Log In',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                sbox,
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have an account?",
+                      style: TextStyle(color: colorblack.withOpacity(0.5)),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // print(emailController.text.trim());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUpScreen(),
+                            ));
+                      },
+                      child: const Text(
+                        "Sign In",
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
