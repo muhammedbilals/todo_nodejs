@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:todo_nodejs/presentation/login_page/screens/login_screen.dart';
+import 'package:todo_nodejs/presentation/screens/splash_screen.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/screens/sign_up_screen.dart';
 
 void main() {
-  
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SignUpScreen(),
+      home: SplashScreen(),
     );
   }
 }

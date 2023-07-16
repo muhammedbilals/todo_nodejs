@@ -1,22 +1,41 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_nodejs/model/user.dart';
 import 'package:todo_nodejs/presentation/core/colors/colors.dart';
 import 'package:todo_nodejs/presentation/core/constant/constant.dart';
+import 'package:todo_nodejs/presentation/home_page/homepage.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/screens/sign_up_screen.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/widgets/textfieldsignup.dart';
+import 'package:todo_nodejs/services/api_service.dart';
 
-
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
-  //     @override
-  // void dispose() {
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   super.dispose();
-  // }
+  late SharedPreferences pref;
+
+  @override
+  void initState() {
+    intisharedpref();
+    super.initState();
+  }
+
+  intisharedpref() async {
+    pref = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -89,23 +108,23 @@ class LoginPage extends StatelessWidget {
                 //   widget: MainPage(),
                 // ),
                 InkWell(
-                  onTap: () {
-                    // StreamBuilder(
-                    //   stream: FirebaseAuth.instance.authStateChanges(),
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.done) {
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => MainPage(),
-                    //           ));
-                    //     } else {
-                    //       return SnackBar(
-                    //           content: Text('Something went wrong'));
-                    //     }
-                    //     return LoginOrSignUp();
-                    //   },
-                    // );
+                  onTap: () async {
+                    if (emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty) {
+                      var success = await UserService.loginUser(User(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      ));
+                      if (success['status']) {
+                        pref.setString('token', success['token']);
+                        log('token stored in shared pref');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ));
+                      }
+                    }
                   },
                   child: Container(
                     width: size.width * 0.9,

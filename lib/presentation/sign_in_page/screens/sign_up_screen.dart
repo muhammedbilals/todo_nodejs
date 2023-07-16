@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_nodejs/model/user.dart';
 import 'package:todo_nodejs/presentation/core/colors/colors.dart';
 import 'package:todo_nodejs/presentation/core/constant/constant.dart';
@@ -7,12 +8,33 @@ import 'package:todo_nodejs/presentation/login_page/screens/login_screen.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/widgets/textfieldsignup.dart';
 import 'package:todo_nodejs/services/api_service.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final nameController = TextEditingController();
+  late SharedPreferences pref;
+
+  @override
+  void initState() {
+    intisharedpref();
+    super.initState();
+  }
+
+  intisharedpref() async {
+    pref = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -62,19 +84,23 @@ class SignUpScreen extends StatelessWidget {
                 sbox,
                 // SignUpButton(size: size, color: colorgreen, text: 'SignUp',widget: MainPage()),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     if (emailController.text.isNotEmpty &&
                         passwordController.text.isNotEmpty) {
-                      UserService.registerUser(User(
+                      var success = await UserService.registerUser(User(
                           email: emailController.text,
                           password: passwordController.text,
                           name: nameController.text));
-                 
-                      Navigator.push(
+                      if (success['status']) {
+                        // pref.setString('token', success['token']);
+
+                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const HomePage(),
                           ));
+                      }
+                     
                     }
                   },
                   child: Container(

@@ -6,7 +6,7 @@ import 'package:todo_nodejs/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static registerUser(User user) async {
+  static dynamic registerUser(User user) async {
     var requestBody = {
       "email": user.email,
       "password": user.password,
@@ -22,8 +22,37 @@ class UserService {
       );
 
       if (response.statusCode == 200) {
+       
+
         log(response.body);
       }
+      var jsonResponce = jsonDecode(response.body);
+      return jsonResponce;
+    } on HttpException catch (e) {
+      throw HttpException('Something failed: $e');
+    }
+  }
+
+  static dynamic loginUser(User user) async {
+    var requestBody = {
+      "email": user.email,
+      "password": user.password,
+    };
+
+    var headers = {"Content-Type": "application/json"};
+
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        body: jsonEncode(requestBody),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        log(response.body);
+      }
+       var jsonResponce = jsonDecode(response.body);
+      return jsonResponce;
     } on HttpException catch (e) {
       throw HttpException('Something failed: $e');
     }
