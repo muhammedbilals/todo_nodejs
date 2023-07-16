@@ -1,7 +1,7 @@
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_nodejs/presentation/AppBarWidget.dart';
+import 'package:todo_nodejs/widgets/AppBarWidget.dart';
 import 'package:todo_nodejs/presentation/core/colors/colors.dart';
 import 'package:todo_nodejs/presentation/core/constant/constant.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/widgets/textfieldsignup.dart';

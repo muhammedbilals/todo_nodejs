@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_nodejs/model/user.dart';
 import 'package:todo_nodejs/presentation/core/colors/colors.dart';
 import 'package:todo_nodejs/presentation/core/constant/constant.dart';
+import 'package:todo_nodejs/presentation/home_page/homepage.dart';
 import 'package:todo_nodejs/presentation/login_page/screens/login_screen.dart';
 import 'package:todo_nodejs/presentation/sign_in_page/widgets/textfieldsignup.dart';
+import 'package:todo_nodejs/services/api_service.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -60,11 +63,19 @@ class SignUpScreen extends StatelessWidget {
                 // SignUpButton(size: size, color: colorgreen, text: 'SignUp',widget: MainPage()),
                 InkWell(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => MainPage(),
-                    //     ));
+                    if (emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty) {
+                      UserService.registerUser(User(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          name: nameController.text));
+                 
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ));
+                    }
                   },
                   child: Container(
                     width: size.width * 0.9,
